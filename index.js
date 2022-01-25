@@ -60,6 +60,7 @@ exports = module.exports = function (opts) {
   var translationsPath = opts.translationsPath || 'i18n';
   var cookieLangName = opts.cookieLangName || 'ulang';
   var browserEnable = opts.browserEnable !== false;
+  var pathEnable = opts.pathEnable !== false;
   var defaultLang = opts.defaultLang || 'en';
   var paramLangName = opts.paramLangName || 'clang';
   var siteLangs = opts.siteLangs || ['en'];
