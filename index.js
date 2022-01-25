@@ -27,7 +27,7 @@ function getLangFromCookie (req, cookieName) {
 
 function getLangFromPath (req) {
   if (req.path) {
-    req.path.split("/");
+    return req.path.split("/");
   } else {
     return [];
   }
@@ -60,7 +60,6 @@ exports = module.exports = function (opts) {
   var translationsPath = opts.translationsPath || 'i18n';
   var cookieLangName = opts.cookieLangName || 'ulang';
   var browserEnable = opts.browserEnable !== false;
-  var pathEnable = opts.pathEnable !== false;
   var defaultLang = opts.defaultLang || 'en';
   var paramLangName = opts.paramLangName || 'clang';
   var siteLangs = opts.siteLangs || ['en'];
@@ -90,44 +89,10 @@ exports = module.exports = function (opts) {
     // set textsVarName value for tests and variable recovery
     req.app.locals.textsVarName = textsVarName;
 
-    while (1) {
-      if (cookieLangName && alreadyTryCookie === false) {
-        var cLang = getLangFromCookie(req, cookieLangName);
-        if (cLang) {
-          computedLang = cLang;
-          break;
-        } else {
-          alreadyTryCookie = true;
-          continue;
-        }
-      } else if (browserEnable && alreadyBrowser === false) {
-        var wLang = getLangFromHeaders(req);
+    var wLang = getLangFromPath(req);
+    computedLang = wLang[1];
 
-        if (wLang.length) {
-          computedLang = wLang[0];
-          break;
-        } else {
-          alreadyBrowser = true;
-          continue;
-        }
-      } else if (pathEnable && alreadyBrowser == false) {
-        var wLang = getLangFromPath(req);
-
-        if (wLang.length) {
-          computedLang = wLang[1];
-          break;
-        } else {
-          alreadyBrowser = true;
-          continue;
-        }
-      }else {
-        computedLang = defaultLang;
-      }
-      if (computedLang !== '') {
-        break;
-      }
-    }
-
+    
       // User is setting a lang via get param. Store and use it.
     if (paramLangName in req.query) {
       if (siteLangs.indexOf(req.query[paramLangName]) > -1) {
