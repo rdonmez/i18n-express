@@ -25,6 +25,14 @@ function getLangFromCookie (req, cookieName) {
   }
 }
 
+function getLangFromPath (req) {
+  if (req.path) {
+    req.path.split("/");
+  } else {
+    return [];
+  }
+}
+
 function loadLangJSONFiles (langPath, defaultLang) {
   var i18n = [];
   i18n[defaultLang] = [];
@@ -101,7 +109,17 @@ exports = module.exports = function (opts) {
           alreadyBrowser = true;
           continue;
         }
-      } else {
+      } else if (pathEnable && alreadyBrowser == false) {
+        var wLang = getLangFromPath(req);
+
+        if (wLang.length) {
+          computedLang = wLang[1];
+          break;
+        } else {
+          alreadyBrowser = true;
+          continue;
+        }
+      }else {
         computedLang = defaultLang;
       }
       if (computedLang !== '') {
